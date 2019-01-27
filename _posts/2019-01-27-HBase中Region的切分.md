@@ -4,7 +4,10 @@ title: "HBase中Region的切分"
 tags: [HBase]
 comments: true
 ---
- 
+
+Region自动切分是HBase能够拥有良好扩展性的最重要因素之一。HBase系统中Region自动切分是如何实现的？这里面涉及很多知识点，比如Region切分的触发条件是什么？Region切分的切分点在哪里？如何切分才能最大的保证Region的可用性？切分过程中要不要将数据移动？等等，这篇文章将会对这些细节进行基本的说明。   
+
+
 ## Region切分触发策略
 HBase已经有多达6种切分触发策略。这里只介绍常见的三种：
 1. ConstantSizeRegionSplitPolicy：0.94版本前默认切分策略。按固定长度分割region，固定长度取值**优先获取table的”MAX_FILESIZE” 值**，若没有设定该属性，则**采用在hbase-site.xml中配置的hbase.hregion.max.filesize值**，在0.94版本中这个值的缺省值已经被调整为：`10 * 1024 * 1024 * 1024` 也就是**10G**，**当table的某一region中的某一store大小（如果采用压缩的场景，store大小为压缩后的文件大小）超过了预定的最大固定长度时，对该region进行split**。
