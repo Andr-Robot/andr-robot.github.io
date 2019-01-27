@@ -5,7 +5,7 @@ tags: [HBase]
 comments: true
 ---
 
-Region自动切分是HBase能够拥有良好扩展性的最重要因素之一。HBase系统中Region自动切分是如何实现的？这里面涉及很多知识点，比如Region切分的触发条件是什么？Region切分的切分点在哪里？如何切分才能最大的保证Region的可用性？切分过程中要不要将数据移动？等等，这篇文章将会对这些细节进行基本的说明。   
+Region自动切分是HBase能够拥有良好扩展性的最重要因素之一。HBase系统中Region自动切分是如何实现的？这篇文章将会对这些细节进行基本的说明。   
 
 
 ## Region切分触发策略
@@ -114,9 +114,10 @@ HBase将整个切分过程包装成了一个事务，意图能够保证切分事
 
 ## reference文件
 execute阶段中的第5步是所有步骤中最核心的一个环节，生成reference文件日志如下所示：
-> 2017-08-12 11:53:38,158 DEBUG [StoreOpener-a00-1] regionserver.StoreFileInfo: reference 'hdfs://hdfscluster/hbase-rsgroup/data/default/music/a00/cf/x00.y00' to region=y00 hfile=x00。
+<p>2017-08-12 11:53:38,158 DEBUG [StoreOpener-0155388346c3c919d3f05d7188e885e0-1] regionserver.StoreFileInfo: reference 'hdfs://hdfscluster/hbase-rsgroup/data/default/music/0155388346c3c919d3f05d7188e885e0/cf/d24415c4fb44427b8f698143e5c4d9dc.00bb6239169411e4d0ecb6ddfdbacf66' to region=00bb6239169411e4d0ecb6ddfdbacf66 hfile=d24415c4fb44427b8f698143e5c4d9dc。</p>
 
-其中reference文件名为`x00.y00`，根据日志可以看到，切分的父region是`y00`，对应的切分文件是`x00`如下所示：   
+
+其中reference文件名为`d24415c4fb44427b8f698143e5c4d9dc.00bb6239169411e4d0ecb6ddfdbacf66`，根据日志可以看到，切分的父region是`00bb6239169411e4d0ecb6ddfdbacf66`，对应的切分文件是`d24415c4fb44427b8f698143e5c4d9dc`如下所示：   
 
 ![reference](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/hbasereferencefile.png)
 
@@ -127,7 +128,7 @@ reference文件是一个引用文件，文件内容主要有两部分构成：
 ## 总结
 整个region**切分过程并没有涉及数据的移动**，所以切分成本本身并不是很高，可以很快完成。**切分后子region的文件实际没有任何用户数据，文件中存储的仅是一些元数据信息－切分点rowkey等**。
 
-### 通过reference文件如何查找数据？
+### 问题一：通过reference文件如何查找数据？
 整个流程如下图所示：
 
 ![](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/referencefinddata.png)   
@@ -135,10 +136,10 @@ reference文件是一个引用文件，文件内容主要有两部分构成：
 1. 根据reference文件名（region名+真实文件名）定位到真实数据所在文件路径
 2. 根据文件内容，确定扫描的范围，然后进行扫描。
 
-### 父region的数据什么时候会迁移到子region目录？
+### 问题二：父region的数据什么时候会迁移到子region目录？
 **子region发生major_compaction时**。我们知道compaction的执行实际上是将store中所有小文件一个KV一个KV从小到大读出来之后再顺序写入一个大文件，完成之后再将小文件删掉，因此compaction本身就需要读取并写入大量数据。**子region执行major_compaction后会将父目录中属于该子region的所有数据读出来并写入子region目录数据文件中**。
 
-### 父region什么时候会被删除？
+### 问题三：父region什么时候会被删除？
 实际上**HMaster会启动一个线程定期遍历检查所有处于splitting状态的父region，确定检查父region是否可以被清理**。检测线程首先会在meta表中揪出所有split列为true的region，并加载出其分裂后生成的两个子region（meta表中splitA列和splitB列），**只需要检查此两个子region是否还存在引用文件**，如果都不存在引用文件就可以认为该父region对应的文件可以被删除。    
 
 ![](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/20170827125935_73066.png)
