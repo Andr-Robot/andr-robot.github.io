@@ -22,12 +22,12 @@ avatar: https://raw.githubusercontent.com/Andr-Robot/andr-robot.github.io/master
 navigation:
   - name: Blog
     url: /
-  - name: About
-    url: /about
   - name: Archive
     url: /archive
   - name: Tags
     url: /tags
+  - name: About
+    url: /about
 
 # Pagination
 paginate: 5
@@ -51,7 +51,7 @@ footer-links:
   youtube: # channel/<your_long_string> or user/<user-name>
 
 # Text under the icons in footer
-footer-text: Copyright © Alpha's Blog 2019 
+footer-text: Copyright © Alpha's Blog 2019
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
