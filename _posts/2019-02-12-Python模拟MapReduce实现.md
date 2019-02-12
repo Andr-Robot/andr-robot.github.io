@@ -5,15 +5,9 @@ tags: [Hadoop]
 comments: true
 ---
 
-* [主程序](#主程序)
-* [map程序](#map程序)
-* [sort程序](#sort程序)
-* [reduce程序](#reduce程序)
-* [测试文件](#测试文件)
-* [执行结果](#执行结果)
-* [参考文献](#参考文献)
+在大数据时代，MapReduce在分布式处理中应用越来越广发，这里通过模拟MapReduce处理流程来加深我们对该方法的了解。     
 
-# 主程序
+## 主程序
 这里的测试文件是放在项目的根目录下，也可以自己制定一个文件。
 
 ```python
@@ -25,7 +19,7 @@ if __name__ == '__main__':
         print(line.strip())
 ```
 
-# map程序
+## map程序
 
 ```python
 # myMap.py
@@ -43,7 +37,7 @@ if __name__ == '__main__':
             print('%s\t%d' % (word, count))
 ```
 
-# sort程序
+## sort程序
 
 ```python
 # mySort.py
@@ -60,7 +54,7 @@ if __name__ == '__main__':
         print('%s\t%s' % i)
 ```
 
-# reduce程序
+## reduce程序
 
 ```python
 # myReduce.py
@@ -86,7 +80,7 @@ if __name__ == '__main__':
         print('%s\t%s' % (current_word, current_count))
 ```
 
-# 测试文件
+## 测试文件
 
 ```
 a b c d
@@ -95,7 +89,7 @@ aa bb cc dd
 ee ff gg hh
 ```
 
-# 执行结果
+## 执行结果
 在Windows下，通过`cmd`运行上面的代码。
 
 ```
@@ -157,6 +151,6 @@ hh      1
 ```
 
 
-# 参考文献
+## 参考文献
 [用python模拟hadoop的map reduce过程](http://abloz.com/%E6%8A%80%E6%9C%AF/2012/06/25/python-simulation-hadoop-map-the-reduce-process/)    
 [用python模拟hadoop的map reduce过程](https://ablozhou.wordpress.com/2012/06/25/python-simulation-hadoop-map-the-reduce-process/)
