@@ -25,6 +25,7 @@ HBase对一个region切分，有几个条件：
 2. 如果非用户请求，并且这个region中任意store含有引用文件，则不切分
 3. 如果不是用户请求，也没有引用文件，则判断每个store的大小，只要其中有一个大于阀值，则切分。这个阀值在上面已经有说到。
 
+关于region切分的实现源码如下所示：     
 [IncreasingToUpperBoundRegionSplitPolicy.java](https://github.com/apache/hbase/blob/master/hbase-server/src/main/java/org/apache/hadoop/hbase/regionserver/IncreasingToUpperBoundRegionSplitPolicy.java)
 
 ```java
