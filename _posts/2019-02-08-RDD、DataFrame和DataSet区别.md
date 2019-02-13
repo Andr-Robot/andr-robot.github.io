@@ -1,11 +1,13 @@
-* [RDD](#rdd)
-* [DataFrame](#dataframe)
-* [DataSet](#dataset)
-* [参考文献](#参考文献)
+---
+layout: post
+title: "RDD、DataFrame和DataSet区别"
+tags: [Spark]
+comments: true
+---
 
 ![rdd dataframe dataset](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/rdddataframedataset.jpg)
 
-# RDD
+## 1 RDD
 一个RDD就是你的数据的一个**不可变的分布式元素集合**，在集群中跨节点分布，可以通过若干提供了转换和处理的底层API进行并行处理。    
 
 **使用RDD的场景**:
@@ -24,7 +26,7 @@
 2. 默认采用的是java序列号方式，序列化结果比较大，而且数据存储在java堆内存中，导致gc比较频繁
 
 
-# DataFrame
+## 2 DataFrame
 DataFrame是一种**以RDD为基础的分布式数据集，类似于传统数据库中的二维表格**。DataFrame引入了**schema**。
 
 ![RDD vs DataFrame](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/551dec089af64_middle.jpg)
@@ -47,7 +49,7 @@ DataFrame是一种**以RDD为基础的分布式数据集，类似于传统数据
 1. 编译时不能类型转化安全检查，运行时才能确定是否有问题
 2. 对于对象支持不友好，rdd内部数据直接以java对象存储，dataframe内存存储的是row对象而不能是自定义对象
 
-# DataSet
+## 3 DataSet
 > A **Dataset** is a strongly typed collection of domain-specific objects that can be transformed
 in parallel using functional or relational operations. Each Dataset also has an untyped view
 called a **DataFrame**, which is a Dataset of **Row**.
@@ -70,7 +72,7 @@ Dataset是“懒惰”的，只在执行行动操作时触发计算。本质上�
 6. 官方建议使用dataset
 
 
-# 参考文献
+## 参考文献
 [且谈Apache Spark的API三剑客：RDD、DataFrame和Dataset](http://www.infoq.com/cn/articles/three-apache-spark-apis-rdds-dataframes-and-datasets)     
 [如何理解spark中RDD和DataFrame的结构？](https://www.zhihu.com/question/48684460)    
 [平易近人、兼容并蓄——Spark SQL 1.3.0概览](https://www.csdn.net/article/2015-04-03/2824407)     
