@@ -9,11 +9,11 @@ comments: true
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
     <script type="text/x-mathjax-config">
         MathJax.Hub.Config({
-            tex2jax: {
+            <!-- tex2jax: {
                 skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
                 inlineMath: [['$','$']]
-            }
-            <!-- extensions: ["tex2jax.js"],
+            } -->
+            extensions: ["tex2jax.js"],
             jax: ["input/TeX", "output/HTML-CSS"],
             tex2jax: {
                 skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
@@ -21,7 +21,7 @@ comments: true
                 displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
                 processEscapes: true
             },
-            "HTML-CSS": { availableFonts: ["TeX"] } -->
+            "HTML-CSS": { availableFonts: ["TeX"] }
         });
     </script>
 </head>
