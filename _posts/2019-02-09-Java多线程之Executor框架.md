@@ -5,12 +5,12 @@ tags: [Java]
 comments: true
 ---
 
-## 线程池
+## 1 线程池
 线程池就是**限制系统中使用线程的数量以及更好的使用线程**。根据系统的运行情况，可以自动或手动设置线程数量，达到运行的最佳效果：配置少了，将影响系统的执行效率，配置多了，又会浪费系统的资源。
 
 当一个任务执行完毕后，就从队列中取一个新任务运行，如果没有新任务，那么这个线程将等待。如果来了一个新任务，但是没有空闲线程的话，那么把任务加入到等待队列中。
 
-## 线程池的生命周期
+## 2 线程池的生命周期
 参见[深入浅出 Java Concurrency (30): 线程池 part 3 Executor 生命周期](http://www.blogjava.net/xylz/archive/2011/01/04/342316.html)     
 
 线程是有多种执行状态的，同样管理线程的线程池也有多种状态。JVM会在所有线程（非后台daemon线程）全部终止后才退出，为了节省资源和有效释放资源关闭一个线程池就显得很重要。有时候无法正确的关闭线程池，将会阻止JVM的结束。
@@ -19,24 +19,24 @@ comments: true
 - 平缓关闭：已经启动的任务全部执行完毕，同时不再接受新的任务
 - 立即关闭：取消所有正在执行和未执行的任务
 
-### 启动线程池
+### 2.1 启动线程池
 线程池在构造前（new操作）是初始状态，一旦构造完成**线程池就进入了执行状态RUNNING**。严格意义上讲线程池构造完成后并没有线程被立即启动，只有进行“预启动”或者接收到任务的时候才会启动线程。
 
 线程池是出于运行状态，随时准备接受任务来执行。
 
-### 关闭线程池
+### 2.2 关闭线程池
 线程池运行中可以通过shutdown()和shutdownNow()来改变运行状态。
 - shutdown()是一个平缓的关闭过程，线程池停止接受新的任务，同时等待已经提交的任务执行完毕，包括那些进入队列还没有开始的任务，这时候**线程池处于SHUTDOWN状态**；
 - shutdownNow()是一个立即关闭过程，线程池停止接受新的任务，同时线程池取消所有执行的任务和已经进入队列但是还没有执行的任务，这时候**线程池处于STOP状态**。**shutdownNow方法本质是调用Thread.interrupt()方法。但我们知道该方法仅仅是让线程处于interrupted状态，并不会让线程真正的停止！所以若只调用或只调用一次shutdownNow()方法，不一定会让线程池中的线程都关闭掉，线程中必须要有处理interrupt事件的机制。**
 
-### 线程池结束
+### 2.3 线程池结束
 一旦shutdown()或者shutdownNow()执行完毕，**线程池就进入TERMINATED状态**，此时线程池就结束了。
 - isTerminating() 如果关闭后所有任务都已完成，则返回 true。
 - isShutdown() 如果此执行程序已关闭，则返回 true。
 
 ![](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/Executor-Lifecycle_thumb_1.png)
 
-### 总结
+### 2.4 总结
 1. 线程池有运行、关闭、停止、结束四种状态，结束后就会释放所有资源
 2. 平缓关闭线程池使用shutdown()
 3. 立即关闭线程池使用shutdownNow()，同时得到未执行的任务列表
@@ -44,7 +44,7 @@ comments: true
 5. 检测线程池是否已经关闭使用isTerminated()
 6. 定时或者永久等待线程池关闭结束使用awaitTermination()操作
 
-## 为什么要引入Executor框架
+## 3 为什么要引入Executor框架
 如果使用`new Thread(...).start()`的方法处理多线程，有如下缺点：
 - **开销大**。对于JVM来说，每次新建线程和销毁线程都会有很大的开销。
 - **线程缺乏管理**。没有一个池来限制线程的数量，如果并发量很高，会创建很多的线程，而且线程之间可能会有相互竞争，这将会过多得占用系统资源，增加系统资源的消耗量。而且线程数量超过系统负荷，容易导致系统不稳定。
@@ -54,7 +54,7 @@ comments: true
 - **有效控制并发线程数**。
 - **提供了更简单灵活的线程管理**。可以提供定时执行、定期执行、单线程、可变线程数等多种线程使用功能。
 
-## Executor接口
+## 4 Executor接口
 Executor是一个接口，**它将任务的提交与任务的执行分离开来，定义了一个接收Runnable对象的方法`execute`。**
 
 ```java
@@ -63,7 +63,7 @@ public interface Executor {
 }
 ```
 
-## ExecutorService接口
+## 5 ExecutorService接口
 ExecutorService继承了Executor，是一个比Executor使用更广泛的子类接口。定义了**终止任务、提交任务、跟踪任务返回结果**等方法。
 
 一个ExecutorService是可以关闭的，关闭之后它将不能再接收任何任务。对于不再使用的ExecutorService，应该将其关闭以释放资源。
@@ -149,9 +149,9 @@ public interface ExecutorService extends Executor {
 }
 ```
 
-## ThreadPoolExecutor
+## 6 ThreadPoolExecutor
 ThreadPoolExecutor是Executor框架最重要的一个类，它即是真正意义上的线程池。
-### ThreadPoolExecutor构造函数
+### 6.1 ThreadPoolExecutor构造函数
 
 ```java
 public ThreadPoolExecutor(int corePoolSize,
@@ -204,10 +204,10 @@ ThreadPoolExecutor线程池的逻辑结构图:
     1. 若线程数小于最大线程数，创建线程
     2. 若线程数等于最大线程数，抛出异常，拒绝任务
 
-## Executors
+## 7 Executors
 Executors类是一个工厂类，提供工厂方法来创建不同类型的线程池，比如`FixedThreadPool` 或 `CachedThreadPool`。
 
-### newCachedThreadPool
+### 7.1 newCachedThreadPool
 创建一个**不限制线程数量**的动态线程池。
 - 因为有多个线程存在，任务不一定会按照顺序执行。
 - 一个线程完成任务后，空闲时间达到60秒则会被结束。
@@ -223,7 +223,7 @@ public static ExecutorService newCachedThreadPool() {
 
 可以看到`newCachedThreadPool`使用的队列是`SynchronousQueue`。线程池的线程数可达到`Integer.MAX_VALUE`，即2147483647。此外由于会有线程的创建和销毁，所以会有一定的系统开销。
 
-### newFixedThreadPool
+### 7.2 newFixedThreadPool
 创建一个**可重用的固定线程数量**的线程池。即`corePoolSize=线程池中的线程数= maximumPoolSize`。
 - 如果没有任务执行，所有的线程都将等待。
 - 如果线程池中的所有线程都处于活动状态，此时再提交任务就在队列中等待，直到有可用线程。
@@ -237,7 +237,7 @@ public static ExecutorService newFixedThreadPool(int nThreads) {
 }
 ```
 
-### newSingleThreadExecutor
+### 7.3 newSingleThreadExecutor
 创建一个**单线程的线程池**：启动一个线程负责按顺序执行任务，先提交的任务先执行。也就是相当于单线程串行执行所有任务。
 
 其原理是：任务会被提交到一个队列里，启动的那个线程会从队里里取任务，然后执行，执行完，再从队列里取下一个任务，再执行。如果该线程执行一个任务失败，并导致线程结束，系统会创建一个新的线程去执行队列里后续的任务，不会因为前面的任务有异常导致后面无辜的任务无法执行。
@@ -251,7 +251,7 @@ public static ExecutorService newSingleThreadExecutor() {
 }
 ```
 
-### newScheduledThreadPool
+### 7.4 newScheduledThreadPool
 创建一个固定线程数的`ScheduledExecutorService`对象，在指定延时之后执行或者以固定的频率周期性的执行提交的任务。
 
 ```java
@@ -260,7 +260,7 @@ public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) 
 }
 ```
 
-### newSingleThreadScheduledExecutor
+### 7.5 newSingleThreadScheduledExecutor
 创建一个单线程的`ScheduledExecutorService`，在指定延时之后执行或者以固定的频率周期性的执行提交的任务。在线程池关闭之前如果有一个任务执行失败，并导致线程结束，系统会创建一个新的线程接着执行队列里的任务。
 
 ```java
@@ -270,8 +270,8 @@ public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
 }
 ```
 
-### 总结
-#### newSingleThreadExecutor 与 newFixedThreadPool(1) 的区别
+### 7.6 总结
+#### 7.6.1 newSingleThreadExecutor 与 newFixedThreadPool(1) 的区别
 
 ```java
 ((ThreadPoolExecutor)newFixedThreadPool(1)).setCorePoolSize(3);
@@ -279,7 +279,7 @@ public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
 
 `newFixedThreadPool(1)`可以后期修改线程数，不保证线程只有一个。而`newSingleThreadExecutor`可以保证。
 
-## ScheduledExecutorService
+## 8 ScheduledExecutorService
 ScheduledExecutorService是一个线程池，用来在指定延时之后执行或者以固定的频率周期性的执行提交的任务。它包含了4个方法。
 
 ```java
@@ -321,8 +321,8 @@ public interface ScheduledExecutorService extends ExecutorService {
 }
 ```
 
-## 总结
-### Executor vs ExecutorService vs Executors
+## 9 总结
+### 9.1 Executor vs ExecutorService vs Executors
 这三者均是 Executor 框架中的一部分。
 1. Executor 和 ExecutorService 这两个接口主要的区别是：**ExecutorService 接口继承了 Executor 接口，是 Executor 的子接口**
 2. Executor 和 ExecutorService 第二个区别是：Executor 接口定义了 `execute()`方法用来接收一个Runnable接口的对象，而 ExecutorService 接口中的 `submit()`方法可以接受Runnable和Callable接口的对象。
@@ -330,7 +330,7 @@ public interface ScheduledExecutorService extends ExecutorService {
 4. Executor 和 ExecutorService 接口第四个区别是除了允许客户端提交一个任务，**ExecutorService 还提供用来控制线程池的方法**。比如：调用 shutDown() 方法终止线程池。
 5. **Executors 类提供工厂方法用来创建不同类型的线程池**。比如: newSingleThreadExecutor() 创建一个只有一个线程的线程池，newFixedThreadPool(int numOfThreads)来创建固定线程数的线程池，newCachedThreadPool()可以根据需要创建新的线程，但如果已有线程是空闲的会重用已有线程。
 
-### 饱和策略
+### 9.2 饱和策略
 当线程池中的线程均处于工作状态，并且线程数已达线程池允许的最大线程数时，就会采取指定的饱和策略来处理新提交的任务。总共有四种策略：
 - AbortPolicy: 直接抛异常
 - CallerRunsPolicy: 用调用者的线程来运行任务
@@ -339,7 +339,7 @@ public interface ScheduledExecutorService extends ExecutorService {
 
 如果使用 Executors 的工厂方法创建的线程池，那么饱和策略都是采用**默认的 AbortPolicy**，所以如果我们想当线程池已满的情况，使用调用者的线程来运行任务，就要自己创建线程池，指定想要的饱和策略，而不是使用 Executors 了。
 
-### Runable接口和Callable接口
+### 9.3 Runable接口和Callable接口
 #参见[java多线程系列：Executors框架](https://juejin.im/post/5b1f21abf265da6e6414a8e3#heading-13)
 
 那么就从提交任务入口看看吧

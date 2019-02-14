@@ -7,7 +7,7 @@ comments: true
 
 在Hadoop中，经常会出现Block和Split这两个关键词，这两个词分别表示什么？他们之间又存在什么关系？接下来将一一解答。     
 
-## Block   
+## 1 Block   
 当我们把文件上传到HDFS时，文件会被分块，**这个是真实物理上的划分**。每块的大小可以通过hadoop-default.xml里配置选项进行设置。系统也提供默认大小，其中Hadoop 1.x中的默认大小为**64M**，而Hadoop 2.x中的默认大小为**128M**。每个Block分别存储在多个DataNode上（默认是3个），用于数据备份进而提供数据容错能力和提高可用性。   
 在很多分布式文件系统中我们都可以看到Block的存在，这种设计的**优点**是：   
 - 存储的文件大小可以大于集群中任意一个磁盘的容量。这很好理解，文件被划分到多个Block中存储，对磁盘透明；
@@ -20,7 +20,7 @@ comments: true
 
 如果一个HDFS上的文件大小(file size) 小于块大小(block size) ，那么HDFS会实际占用Linux file system的多大空间？   
 **答案**是实际的文件大小，而非一个块的大小。   
-## Split
+## 2 Split
 split 是**逻辑意义**上的split。 通常在 M/R 程序或者其他数据处理技术上用到。根据你处理的数据量的情况，split size是允许用户自定义的。    
 split size 定义好了之后，可以控制 M/R 中 Mapper 的数量。如果M/R中没有定义 split size ， 就用默认的HDFS配置作为 input split。   
 **输入分片（Input Split）**：在进行map计算之前，mapreduce会根据输入文件计算输入分片（input split），每个输入分片（input split）针对一个map任务，输入分片（input split）存储的并非数据本身，而是一个分片长度和一个记录数据的位置的数组。   
@@ -32,7 +32,7 @@ split size 定义好了之后，可以控制 M/R 中 Mapper 的数量。如果M/
 - 如果`mapred.max.split.size`**小于**`block size`，则会将一个block拆成多个split，增加了Map任务数。   
 - 先获取文件在HDFS上的路径和Block信息，然后根据splitSize对文件进行切分（` splitSize = computeSplitSize(blockSize, minSize, maxSize)`），默认splitSize 就等于blockSize的默认值（64m）。   
 
-## 总结
+## 3 总结
 - block是物理上的数据分割，而split是逻辑上的分割。
 - 如果没有特别指定，split size 就等于 HDFS 的 block size 。
 - 用户可以在M/R 程序中自定义split size。

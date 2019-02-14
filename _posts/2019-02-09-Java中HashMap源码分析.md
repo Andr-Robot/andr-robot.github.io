@@ -6,7 +6,7 @@ comments: true
 ---
 
 
-## HashMap的定义
+## 1 HashMap的定义
 
 ```java
 public class HashMap<K,V> extends AbstractMap<K,V>
@@ -42,8 +42,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
 
 HashMap继承AbstractMap类，实现了Map、Cloneable和Serializable接口。
 
-## HashMap的构造方法
-### HashMap()
+## 2 HashMap的构造方法
+### 2.1 HashMap()
 该构造函数是默认构造函数，意在构造一个具有：**默认初始容量 (16) 和 默认负载因子(0.75)** 的空 HashMap
 
 ```java
@@ -57,7 +57,7 @@ public HashMap() {
 ```
 
 
-### HashMap(int initialCapacity)
+### 2.2 HashMap(int initialCapacity)
 该构造函数意在构造**一个指定初始容量和默认负载因子 (0.75)** 的空 HashMap
 
 ```java
@@ -73,7 +73,7 @@ public HashMap(int initialCapacity) {
 }
 ```
 
-### HashMap(int initialCapacity, float loadFactor)
+### 2.3 HashMap(int initialCapacity, float loadFactor)
 指定“容量大小”和“加载因子”的构造函数。
 
 ```
@@ -106,7 +106,7 @@ public HashMap(int initialCapacity, float loadFactor) {
 ```
 
 
-### HashMap(Map<? extends K, ? extends V> m)
+### 2.4 HashMap(Map<? extends K, ? extends V> m)
 包含“子Map”的构造函数。
 
 ```java 
@@ -125,7 +125,7 @@ public HashMap(Map<? extends K, ? extends V> m) {
 }
 ```
 
-## HashCode()
+## 3 HashCode()
 
 ```java
 public final int hashCode() {
@@ -133,7 +133,7 @@ public final int hashCode() {
 }
 ```
 
-## HashMap保存数据的过程
+## 4 HashMap保存数据的过程
 1. 首先，判断key是否为null；
     - 若为null，则直接调用putForNullKey方法；
     - 若不为空，则先计算key的hash值；
@@ -141,7 +141,7 @@ public final int hashCode() {
 3. 如果table数组在该位置处有元素，则查找是否存在相同的key，若存在则覆盖原来key的value；
 4. 否则将该元素保存在链头（最先保存的元素放在链尾）。此外，若table在该处没有元素，则直接保存。
 
-## HashMap读取数据的过程
+## 5 HashMap读取数据的过程
 HashMap只需通过key的hash值定位到table数组的某个特定的桶，然后查找并返回该key对应的value即可。
 
 调用HashMap的get(Object key)方法后，若返回值是 NULL，则存在如下两种可能：
@@ -149,7 +149,7 @@ HashMap只需通过key的hash值定位到table数组的某个特定的桶，然�
 - HashMap 中不存在该 key。
 
 
-## HashMap 的底层数组长度为何总是2的n次方？
+## 6 HashMap 的底层数组长度为何总是2的n次方？
 - 不同的hash值发生碰撞的概率比较小，这样就会使得数据在table数组中分布较均匀，空间利用率较高，查询速度也较快；
 - h&(length - 1) 就相当于对length取模，而且在速度、效率上比直接取模要快得多，即二者是等价不等效的，这是HashMap在速度和效率上的一个优化。
 

@@ -7,7 +7,7 @@ comments: true
 
 Hive中除了内置的函数，用户也可以自定义函数。用户自定义函数包含普通用户自定义函数、用户自定义聚集函数和用户自定义表函数。本文将分别介绍这几种函数，以及用户自定义函数的部署。
 
-## UDF
+## 1 UDF
 普通的用户自定义函数。**接受单行输入，并产生单行输出**。继承UDF，重写evaluate方法即可。
 
 ```java
@@ -25,7 +25,7 @@ public final class Lower extends UDF {
 ```
 
 
-## UDAF
+## 2 UDAF
 用户定义聚集函数（User-defined aggregate function）。**接受多行输入，并产生单行输出**。比如MAX，COUNT函数。
 
 步骤：
@@ -41,7 +41,7 @@ public final class Lower extends UDF {
 
 实例参见[Hive中UDF、UDAF和UDTF使用](https://blog.csdn.net/fover717/article/details/64926854) 
 
-## UDTF
+## 3 UDTF
 用户定义表生成函数（User-defined table-generating function）。**接受单行输入，并产生多行输出（即一个表）**。
 
 步骤：
@@ -54,7 +54,7 @@ public final class Lower extends UDF {
 
 实例参见[Hive中UDF、UDAF和UDTF使用](https://blog.csdn.net/fover717/article/details/64926854) 
 
-## 部署函数
+## 4 部署函数
 
 ```
 这个是最常见的Hive使用方式，通过hive的命令来完成UDF的部署
@@ -64,12 +64,12 @@ hive> CREATE TEMPORARY FUNCTION function_name AS 'udf类路径'; 这种方法的
 
 具体参见[hive 部署UDF函数](https://yq.aliyun.com/articles/499562)
 
-## Hive常用的函数介绍
-### collect_set和collect_list
+## 5 Hive常用的函数介绍
+### 5.1 collect_set和collect_list
 - collect_set(col)函数只接受基本数据类型，它的主要作用是将某字段的值进行去重汇总，产生array类型字段。
 - collect_list(col)函数只接受基本数据类型，它的主要作用是将某字段的值进行汇总，产生array类型字段。
 
-### concat和concat_ws
+### 5.2 concat和concat_ws
 
  返回类型 | 函数名 | 描述
 ---|---|---
@@ -77,7 +77,7 @@ string | concat(string\|binary A, string\|binary B...) | 返回将A和B按顺序
 string | concat_ws(string SEP, string A, string B...) | 类似concat() ，但连接时会使用自定义的分隔符SEP
 string | concat_ws(string SEP, array<string>) | 类似concat_ws() ，但参数为字符串数组
 
-### get_json_object
+### 5.3 get_json_object
 json解析函数。
 - 语法: `get_json_object(string json_string, string path)`
 - 返回值: `string`
@@ -96,7 +96,7 @@ hive> select get_json_object('{"store":
 amy
 ```
 
-### explode
+### 5.4 explode
 explode(array|map)函数接受array或map类型的参数，其作用恰好与collect_set相反，实现将array或map类型数据行转列。
 详情参见[Hive-explode[列转行]关键字使用](https://my.oschina.net/zhzhenqin/blog/602536)和[Lateral View用法 与 Hive UDTF explode](https://blog.csdn.net/oopsoom/article/details/26001307)    
 
