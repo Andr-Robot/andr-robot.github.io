@@ -8,7 +8,7 @@ comments: true
 Region自动切分是HBase能够拥有良好扩展性的最重要因素之一。HBase系统中Region自动切分是如何实现的？这篇文章将会对这个问题进行详细的说明。   
 
 
-## Region切分触发策略
+## 1 Region切分触发策略
 HBase已经有多达6种切分触发策略。这里只介绍常见的三种：
 1. ConstantSizeRegionSplitPolicy：0.94版本前默认切分策略。按固定长度分割region，固定长度取值**优先获取table的”MAX_FILESIZE” 值**，若没有设定该属性，则**采用在hbase-site.xml中配置的hbase.hregion.max.filesize值**，在0.94版本中这个值的缺省值已经被调整为：`10 * 1024 * 1024 * 1024` 也就是**10G**，**当table的某一region中的某一store大小（如果采用压缩的场景，store大小为压缩后的文件大小）超过了预定的最大固定长度时，对该region进行split**。
     - 总结：**切分策略对于大表和小表没有明显的区分**。
@@ -79,17 +79,17 @@ public boolean canSplit() {
 }
 ```
 
-## 寻找SplitPoint
+## 2 寻找SplitPoint
 region切分策略会触发region切分，切分开始之后的第一件事是寻找切分点－splitpoint。所有默认切分策略，无论是ConstantSizeRegionSplitPolicy、IncreasingToUpperBoundRegionSplitPolicy抑或是SteppingSplitPolicy，对于切分点的定义都是一致的：
 > 整个region中**最大store中的最大文件中最中心的一个block的首个rowkey**。如果定位到的rowkey是整个文件的首个rowkey或者最后一个rowkey的话，就认为没有切分点。
 
-## Region核心切分流程
+## 3 Region核心切分流程
 HBase将整个切分过程包装成了一个事务，意图能够保证切分事务的原子性。整个分裂事务过程分为三个阶段：prepare –> execute –> (rollback) 。
 
-### prepare阶段
+### 3.1 prepare阶段
 在内存中初始化两个子region，具体是生成两个HRegionInfo对象，包含tableName、regionName、startkey、endkey等。同时会生成一个transaction journal（日志），这个对象用来记录切分的进展，具体见rollback阶段。
 
-### execute阶段
+### 3.2 execute阶段
 切分的核心操作。见下图：
 
 ![regionsplit](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/regionsplit.png)     
@@ -108,12 +108,12 @@ HBase将整个切分过程包装成了一个事务，意图能够保证切分事
 
     ![](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/20170827130021_69166.png)
 
-### rollback阶段
+### 3.3 rollback阶段
 如果execute阶段出现异常，则执行rollback操作。为了实现回滚，整个切分过程被分为很多子阶段，回滚程序会根据当前进展到哪个子阶段清理对应的垃圾数据。
 
 ![regionsplitprogress](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/regionsplitprogress.png)   
 
-## reference文件
+## 4 reference文件
 execute阶段中的第5步是所有步骤中最核心的一个环节，生成reference文件日志如下所示：
 > <p style="font-size:80%">2017-08-12 11:53:38,158 DEBUG [StoreOpener-0155388346c3c919d3f05d7188e885e0-1] regionserver.StoreFileInfo: reference 'hdfs://hdfscluster/hbase-rsgroup/data/default/music/
 0155388346c3c919d3f05d7188e885e0/cf/d24415c4fb44427b8f698143e5c4d9dc.00bb6239169411e4d0ecb6ddfdbacf66' to region=00bb6239169411e4d0ecb6ddfdbacf66 hfile=d24415c4fb44427b8f698143e5c4d9dc。</p>
@@ -127,7 +127,7 @@ reference文件是一个引用文件，文件内容主要有两部分构成：
 1. 是切分点splitkey，
 2. 是一个boolean类型的变量（true或者false），true表示该reference文件引用的是父文件的上半部分（top），而false表示引用的是下半部分 （bottom）。
 
-## 总结
+## 5 总结
 整个region**切分过程并没有涉及数据的移动**，所以切分成本本身并不是很高，可以很快完成。**切分后子region的文件实际没有任何用户数据，文件中存储的仅是一些元数据信息－切分点rowkey等**。
 
 ### 问题一：通过reference文件如何查找数据？

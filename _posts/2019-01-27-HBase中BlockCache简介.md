@@ -7,7 +7,7 @@ comments: true
 
 **二八法则**：80%的业务请求都集中在20%的热点数据上，因此将这部分数据缓存起就可以极大地提升系统性能。
 
-## HBase的缓存结构
+## 1 HBase的缓存结构
 ![缓存结构](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/HBaseBlockCache.png)
 
 HBase在实现中提供了两种缓存结构：**MemStore**和**BlockCache**。
@@ -20,12 +20,12 @@ BlockCache是Region Server级别的，**一个Region Server只有一个Block Cac
 
 **BlockCache 本质上是将热数据放到内存里维护起来**，避免 Disk I/O，当然即使 BlockCache 找不到数据还是可以去 MemStore 中找的，只有两边都不存在数据的时候，才会读内存里的 HFile 索引寻址到硬盘，进行一次 I/O 操作。
 
-## HBase中BlockCache的实现方案
+## 2 HBase中BlockCache的实现方案
 - LRUBlockCache 是最初的实现方案，也是默认的实现方案
 - SlabCache
 - BucketCache
 
-### 区别
+### 2.1 区别
 这三种方案的不同之处**在于对内存的管理模式**。
 - LRUBlockCache是将所有数据都放入JVM Heap中，交给JVM进行管理。
 - SlabCache和BucketCache采用将部分数据存储在堆外，交给HBase自己管理。
