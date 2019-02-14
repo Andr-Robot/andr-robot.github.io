@@ -5,6 +5,18 @@ tags: [数据结构与算法]
 comments: true
 ---
 
+<head>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+            }
+        });
+    </script>
+</head>
 
 通常我们遍历一棵二叉树，可以用前序、中序或后序的方法来遍历，同时可以采取迭代或者递归的方法，然而这两种方法的时间和空间复杂度都是`$O(n)$`。  
 
