@@ -27,8 +27,6 @@ Obj(\Theta)=\sum\limits_il(y_i, \hat y_i)+\sum\limits_k\Omega(f_k)
 \Omega(f)=\gamma T+\dfrac{1}{2}\lambda||w||^2
 $$   
 
-<img src="https://latex.codecogs.com/png.latex?\dpi{150}&space;\bg_black&space;\large&space;Obj(\Theta)=\sum\limits_il(y_i,&space;\hat&space;y_i)&plus;\sum\limits_k\Omega(f_k)&space;\Omega(f)=\gamma&space;T&plus;\dfrac{1}{2}\lambda||w||^2" title="\large Obj(\Theta)=\sum\limits_il(y_i, \hat y_i)+\sum\limits_k\Omega(f_k) \Omega(f)=\gamma T+\dfrac{1}{2}\lambda||w||^2" />
-
 其中`$i$`是样本id，`$k$`是树id（轮数），`$T$`是叶子结点的总数，由于loss函数和复杂度项都是凸函数，所以有最小值。`$w$`是给定了某个输入对应每个叶子结点分数是什么，将`$w$`的`$L_2$`正则项加在目标函数中，可以有效的防止过拟合。叶子节点的数目也作为正则项加在了目标函数中，一定程度上限制了叶子数量，防止过拟合。而传统GBDT防止过拟合的手段是预剪枝或者后剪枝。
 
 XGBoost的具体推导过程参见[XGBoost 与 Boosted Tree](http://www.52cs.org/?p=429)和[XGBoost 介绍](http://pengshuang.space/2017/03/15/XGBoost-%E4%BB%8B%E7%BB%8D/)。   
