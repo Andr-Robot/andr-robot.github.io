@@ -147,10 +147,10 @@ reference文件是一个引用文件，文件内容主要有两部分构成：
 ![](https://raw.githubusercontent.com/Andr-Robot/iMarkdownPhotos/master/Res/20170827125935_73066.png)
 
 ## 参考文献：
-[HBase原理 – 所有Region切分的细节都在这里了](http://hbasefly.com/2017/08/27/hbase-split/)
-[Hadoop HBase中split原理学习](http://forlan.iteye.com/blog/2374049)
-[HBase笔记：Region拆分策略](http://blog.javachen.com/2014/01/16/hbase-region-split-policy.html)   
-[hbase split 源码分析之split策略](https://segmentfault.com/a/1190000015299102)
+[HBase原理 – 所有Region切分的细节都在这里了](http://hbasefly.com/2017/08/27/hbase-split/)   
+[Hadoop HBase中split原理学习](http://forlan.iteye.com/blog/2374049)   
+[HBase笔记：Region拆分策略](http://blog.javachen.com/2014/01/16/hbase-region-split-policy.html)    
+[hbase split 源码分析之split策略](https://segmentfault.com/a/1190000015299102)   
 
 
 
