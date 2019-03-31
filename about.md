@@ -4,8 +4,9 @@ title: About
 permalink: /about/
 ---
 
-This page is under construction.
+Name: Alpha
+从事数据开发工作......
+技能：Java Scala Python Spark
 
 ### Contact me
-
-[None](mailto:none@email.com)
+Github: ![Andr-Robot](https://github.com/Andr-Robot)
