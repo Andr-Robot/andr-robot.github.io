@@ -22,7 +22,7 @@ comments: true
 XGBoost 的目标函数由损失函数和复杂度组成。复杂度又由叶子数量和 L2 正则组成。
 
 $$
-Obj(\Theta)=\sum\limits_il(y_i, \hat y_i)+\sum\limits_k\Omega(f_k)
+Obj(\Theta)=\sum\limits_il(y_i, \hat y_i)+\sum\limits_k\Omega(f_k) \\
 
 \Omega(f)=\gamma T+\dfrac{1}{2}\lambda||w||^2
 $$   
